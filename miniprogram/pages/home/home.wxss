@@ -406,3 +406,162 @@
   58% { transform: translateY(0); }
   74% { transform: translateY(-14rpx); }
 }
+
+/* ================= 等级 / 金币 / 经验 ================= */
+.who-row {
+  display: flex;
+  align-items: center;
+}
+
+.lv {
+  font-size: 19rpx;
+  color: #8f6bf0;
+  background: rgba(143, 107, 240, 0.12);
+  border-radius: 10rpx;
+  padding: 3rpx 12rpx;
+  margin-left: 12rpx;
+}
+
+.coin-pill {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 999rpx;
+  padding: 8rpx 20rpx;
+  box-shadow: 0 8rpx 20rpx rgba(40, 40, 70, 0.06);
+}
+
+.coin-ico {
+  font-size: 22rpx;
+}
+
+.coin-num {
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #d98a24;
+  margin-left: 8rpx;
+  font-variant-numeric: tabular-nums;
+}
+
+.exp {
+  display: flex;
+  align-items: center;
+  margin-top: 16rpx;
+}
+
+.exp-bar {
+  flex: 1;
+  height: 8rpx;
+  border-radius: 999rpx;
+  background: rgba(143, 107, 240, 0.14);
+  overflow: hidden;
+}
+
+.exp-fill {
+  height: 100%;
+  border-radius: 999rpx;
+  background: linear-gradient(90deg, #bda6ff, #8f6bf0);
+  transition: width 0.5s ease;
+}
+
+.exp-text {
+  font-size: 19rpx;
+  color: #b0b4c4;
+  margin-left: 14rpx;
+}
+
+/* ================= 签到 ================= */
+.checkin {
+  display: flex;
+  align-items: center;
+  margin-top: 20rpx;
+  padding: 18rpx 22rpx;
+  border-radius: 26rpx;
+  background: linear-gradient(135deg, #fff4d9, #ffe6b8);
+  box-shadow: 0 10rpx 26rpx rgba(220, 160, 60, 0.18);
+}
+
+.checkin-ico {
+  font-size: 34rpx;
+  margin-right: 16rpx;
+}
+
+.checkin-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.checkin-title {
+  font-size: 25rpx;
+  color: #8a5a12;
+  font-weight: 500;
+}
+
+.checkin-sub {
+  font-size: 20rpx;
+  color: #b98b4a;
+  margin-top: 4rpx;
+}
+
+.checkin-btn {
+  font-size: 23rpx;
+  color: #ffffff;
+  background: #e8a13a;
+  border-radius: 999rpx;
+  padding: 9rpx 24rpx;
+}
+
+/* ================= 两个入口 ================= */
+.entries {
+  display: flex;
+  margin-top: 24rpx;
+}
+
+.entry-card {
+  flex: 1;
+  margin: 0 8rpx;
+  padding: 24rpx 0 20rpx;
+  border-radius: 28rpx;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 12rpx 30rpx rgba(40, 40, 70, 0.07);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.12s ease;
+}
+
+.entry-card:active {
+  transform: scale(0.97);
+}
+
+.entry-ico-wrap {
+  width: 70rpx;
+  height: 70rpx;
+  border-radius: 22rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14rpx;
+}
+
+.entry-ico-wrap.talk {
+  background: linear-gradient(135deg, #a68bff, #7f5df0);
+  box-shadow: 0 8rpx 18rpx rgba(127, 93, 240, 0.26);
+}
+
+.entry-ico-wrap.shop {
+  background: linear-gradient(135deg, #ffcf8a, #f79b3c);
+  box-shadow: 0 8rpx 18rpx rgba(247, 155, 60, 0.26);
+}
+
+.entry-title {
+  font-size: 25rpx;
+  color: #22202b;
+}
+
+.entry-sub {
+  font-size: 19rpx;
+  color: #a3a8b8;
+  margin-top: 5rpx;
+}

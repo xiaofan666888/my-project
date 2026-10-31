@@ -6,10 +6,30 @@
 
     <view class="topbar">
       <view class="who">
-        <text class="who-name">小名还没起</text>
+        <view class="who-row">
+          <text class="who-name">小名还没起</text>
+          <text class="lv">Lv.{{level}} · {{title}}</text>
+        </view>
         <text class="who-sub">{{moodText}}</text>
       </view>
-      <text class="since">{{since}}</text>
+      <view class="coin-pill">
+        <text class="coin-ico">🪙</text>
+        <text class="coin-num">{{coins}}</text>
+      </view>
+    </view>
+
+    <view class="exp">
+      <view class="exp-bar"><view class="exp-fill" style="width:{{expPct}}%"></view></view>
+      <text class="exp-text">{{expText}}</text>
+    </view>
+
+    <view class="checkin" wx:if="{{showCheckIn}}" bindtap="onCheckIn">
+      <text class="checkin-ico">🎁</text>
+      <view class="checkin-text">
+        <text class="checkin-title">今日签到 +{{checkInReward}} 金币</text>
+        <text class="checkin-sub">已连续 {{streak}} 天</text>
+      </view>
+      <text class="checkin-btn">领取</text>
     </view>
 
     <view class="stage">
@@ -58,9 +78,9 @@
 
     <view class="actions">
       <view class="act {{disFeed ? 'off' : ''}}" data-act="feed" bindtap="onAction">
-        <text class="act-ico">🍖</text>
+        <text class="act-ico">🍚</text>
         <text class="act-name">喂食</text>
-        <text class="act-cd">{{cdFeed || '＋饱食'}}</text>
+        <text class="act-cd">{{cdFeed || ('余 ' + foodCount)}}</text>
       </view>
       <view class="act {{disBath ? 'off' : ''}}" data-act="bath" bindtap="onAction">
         <text class="act-ico">🛁</text>
@@ -74,13 +94,17 @@
       </view>
     </view>
 
-    <view class="entry" bindtap="goTalk">
-      <view class="entry-ico-wrap"><text class="entry-ico">🎤</text></view>
-      <view class="entry-text">
+    <view class="entries">
+      <view class="entry-card" bindtap="goTalk">
+        <view class="entry-ico-wrap talk"><text class="entry-ico">🎤</text></view>
         <text class="entry-title">学我说话</text>
-        <text class="entry-sub">按住说一句，它用怪声学你</text>
+        <text class="entry-sub">变声复读</text>
       </view>
-      <text class="entry-arrow">›</text>
+      <view class="entry-card" bindtap="goShop">
+        <view class="entry-ico-wrap shop"><text class="entry-ico">🏪</text></view>
+        <text class="entry-title">小卖部</text>
+        <text class="entry-sub">买点吃的</text>
+      </view>
     </view>
 
     <view class="debug">

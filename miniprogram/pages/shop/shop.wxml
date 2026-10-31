@@ -1,0 +1,48 @@
+<view class="page">
+  <view class="glow"></view>
+
+  <view class="container">
+
+    <view class="head">
+      <view class="head-left">
+        <text class="title">小卖部</text>
+        <text class="sub">买点它爱吃的</text>
+      </view>
+      <view class="coin-pill">
+        <text class="coin-ico">🪙</text>
+        <text class="coin-num">{{coins}}</text>
+      </view>
+    </view>
+
+    <view class="card" wx:for="{{foods}}" wx:key="id">
+      <view class="food-ico">{{item.icon}}</view>
+
+      <view class="food-main">
+        <view class="food-row">
+          <text class="food-name">{{item.name}}</text>
+          <text class="food-own">已有 {{item.count}}</text>
+        </view>
+        <text class="food-desc">{{item.desc}}</text>
+        <view class="food-effects">
+          <text class="eff">饱食 +{{item.hunger}}</text>
+          <text class="eff" wx:if="{{item.mood > 0}}">心情 +{{item.mood}}</text>
+          <text class="eff eff-exp">经验 +{{item.exp}}</text>
+        </view>
+      </view>
+
+      <view class="buy {{item.affordable ? '' : 'poor'}}" data-id="{{item.id}}" bindtap="onBuy">
+        <text class="buy-price">🪙 {{item.price}}</text>
+        <text class="buy-txt">{{item.affordable ? '购买' : '不够'}}</text>
+      </view>
+    </view>
+
+    <view class="tips">
+      <text class="tip-line">· 金币来自互动、签到和照顾它</text>
+      <text class="tip-line">· 每天赚币有上限，防止一直戳</text>
+      <text class="tip-line">· 喂食会加经验，升级后称号会变</text>
+    </view>
+
+    <view class="back" bindtap="goHome">回到宠物</view>
+
+  </view>
+</view>

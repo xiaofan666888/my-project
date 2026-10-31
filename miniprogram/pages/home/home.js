@@ -1,4 +1,5 @@
 const pet = require('../../utils/pet.js');
+const game = require('../../utils/game.js');
 
 const STORE_KEY = 'pet_state_v1';
 
@@ -19,7 +20,6 @@ function pick(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-/** 数值 → 表情。这就是"情绪底色"的具体落地 */
 function expressionOf(s) {
   if (s.mood < 22) return 'sad';
   if (s.hunger < 18 || s.clean < 18) return 'angry';
@@ -27,7 +27,6 @@ function expressionOf(s) {
   return 'normal';
 }
 
-/** 数值 → 状态文案 */
 function moodTextOf(s) {
   if (s.hunger < 20) return '饿到没力气';
   if (s.clean < 20) return '身上脏脏的';
@@ -49,6 +48,15 @@ Page({
     since: '刚刚',
     moodText: '看起来还不错',
     particles: [],
+    coins: 0,
+    level: 1,
+    title: '陌生人',
+    expPct: 0,
+    expText: '',
+    foodCount: 0,
+    showCheckIn: false,
+    streak: 0,
+    checkInReward: 0,
     disFeed: false,
     disBath: false,
     disPlay: false,
@@ -63,14 +71,15 @@ Page({
     this.setData({ avatar: this.avatar });
     this.loadState();
     this.render();
+    this.maybeEvent();
   },
 
   onShow() {
-    if (this.state) {
-      this.state = pet.settle(this.state, Date.now());
-      this.save();
-      this.render();
-    }
+    // 每次都从存储里重新读，否则从商店回来时买到的食物不会生效
+    this.loadState();
+    this.render();
+    this.refreshCheckIn();
+    this.stopTimer();
     this.timer = setInterval(() => this.tick(), 1000);
   },
 
@@ -93,7 +102,9 @@ Page({
 
   loadState() {
     const raw = wx.getStorageSync(STORE_KEY);
-    this.state = raw && raw.lastTick ? pet.settle(raw, Date.now()) : pet.defaults();
+    const base = raw && raw.lastTick ? pet.settle(raw, Date.now()) : pet.defaults();
+    this.state = game.ensure(base);
+    this.awayMs = raw && raw.lastTick ? Date.now() - raw.lastTick : 0;
   },
 
   save() {
@@ -115,6 +126,8 @@ Page({
       left[k] = ms > 0 ? Math.ceil(ms / 1000) + 's' : '';
     });
 
+    const lv = game.levelOf(s.exp);
+
     const patch = {
       hunger: Math.round(s.hunger),
       clean: Math.round(s.clean),
@@ -122,6 +135,13 @@ Page({
       moodText: moodTextOf(s),
       petImg: '/images/' + this.avatar + '/' + this.avatar + '-' + expressionOf(s) + '.png',
       since: pet.sinceText(s.lastTick),
+      coins: s.coins,
+      level: lv.lv,
+      title: lv.title,
+      expPct: lv.progress,
+      expText: lv.isMax ? '已满级' : (s.exp + ' / ' + lv.nextNeed),
+      foodCount: s.inv.basic,
+      streak: s.streak,
       disFeed: !!left.feed,
       disBath: !!left.bath,
       disPlay: !!left.play,
@@ -130,7 +150,6 @@ Page({
       cdPlay: left.play
     };
 
-    // 正在说话时不要被每秒的刷新覆盖掉
     if (!this._bubble) {
       patch.say = pet.wordsOf(s);
     }
@@ -138,7 +157,38 @@ Page({
     this.setData(patch);
   },
 
-  /** 点一下飘出几个小图标 */
+  refreshCheckIn() {
+    const s = this.state;
+    const done = s.lastCheckIn === game.todayKey();
+    if (done) {
+      this.setData({ showCheckIn: false });
+      return;
+    }
+    const reward = Math.min(8 + s.streak * 3, 26);
+    this.setData({ showCheckIn: true, checkInReward: reward });
+  },
+
+  onCheckIn() {
+    const r = game.checkIn(this.state);
+    this.save();
+    this.setData({ showCheckIn: false });
+    this.render();
+    if (r.ok) {
+      this.say('签到 +' + r.reward + ' 金币，连续 ' + r.streak + ' 天', 'anim-feet');
+    }
+  },
+
+  /** 离开太久，可能发生点事 */
+  maybeEvent() {
+    const ev = game.randomEvent(this.awayMs || 0);
+    if (!ev) return;
+    this.state.mood = pet.clamp(this.state.mood + ev.mood);
+    this.save();
+    setTimeout(() => {
+      this.say(ev.text, '');
+    }, 900);
+  },
+
   spawnParticles(part) {
     const icons = PARTICLE_ICONS[part] || ['✨'];
     const list = [];
@@ -155,12 +205,10 @@ Page({
     this._pT = setTimeout(() => this.setData({ particles: [] }), 1100);
   },
 
-  /** 说一句话 + 播一个动画 */
   say(text, anim) {
     this._bubble = true;
     this.setData({ say: text, bubbleOn: true, anim: '' });
 
-    // 先清空再加类，保证同一个动画能连续触发
     setTimeout(() => {
       this.setData({ anim: anim || '' });
     }, 20);
@@ -173,7 +221,6 @@ Page({
     }, 1100);
   },
 
-  /** 触摸身体部位 */
   onTouch(e) {
     const part = e.currentTarget.dataset.part;
     this.state = pet.settle(this.state, Date.now());
@@ -181,7 +228,6 @@ Page({
     const hungry = this.state.hunger < 25;
     const dirty = this.state.clean < 25;
 
-    // 数值在这里的作用变了：不是掉血，是决定"它心情如何、怎么回你"
     let text;
     let anim;
 
@@ -196,8 +242,10 @@ Page({
       anim = 'anim-' + part;
     }
 
-    // 被摸一下心情会好一点点
     this.state.mood = pet.clamp(this.state.mood + (part === 'belly' ? 3 : 1.2));
+    // 互动也给一点点金币和少量经验，但有每日上限
+    const gain = game.addCoins(this.state, 1);
+    if (gain > 0) game.addExp(this.state, 1);
     this.save();
 
     this.say(text, anim);
@@ -209,8 +257,36 @@ Page({
     }
   },
 
+  /** 喂食：消耗一个口粮 */
+  onFeed() {
+    const s = this.state;
+    if ((s.cd.feed || 0) > Date.now()) return;
+
+    if ((s.inv.basic || 0) <= 0) {
+      this.say('口粮吃完了，去商店买点吧', 'anim-refuse');
+      return;
+    }
+
+    const r = game.useFood(s, 'basic');
+    if (!r.ok) {
+      this.say(r.msg, 'anim-refuse');
+      return;
+    }
+    s.cd.feed = Date.now() + pet.CONFIG.actions.feed.cooldownSec * 1000;
+    this.save();
+
+    this.say(r.leveledUp ? '升级了！现在是「' + r.level.title + '」' : '好吃！', 'anim-head');
+    this.spawnParticles('belly');
+    this.render();
+  },
+
   onAction(e) {
     const name = e.currentTarget.dataset.act;
+    if (name === 'feed') {
+      this.onFeed();
+      return;
+    }
+
     const cfg = pet.CONFIG.actions[name];
     if (!cfg) return;
 
@@ -223,17 +299,18 @@ Page({
       this.state[k] = pet.clamp(this.state[k] + cfg[k]);
     });
     this.state.cd[name] = now + cfg.cooldownSec * 1000;
+    game.addCoins(this.state, 2);
+    game.addExp(this.state, 3);
     this.save();
 
     const lines = {
-      feed: ['好吃！', '还想要…', '谢谢～'],
       bath: ['舒服～', '干净了！', '别弄我头发'],
       play: ['再来一次！', '好玩好玩', '累死我了']
     };
-    const animMap = { feed: 'anim-head', bath: 'anim-belly', play: 'anim-feet' };
+    const animMap = { bath: 'anim-belly', play: 'anim-feet' };
 
     this.say(pick(lines[name] || ['嗯']), animMap[name]);
-    this.spawnParticles(name === 'bath' ? 'belly' : name === 'play' ? 'feet' : 'head');
+    this.spawnParticles(name === 'bath' ? 'belly' : 'feet');
     this.render();
   },
 
@@ -247,14 +324,10 @@ Page({
   },
 
   onReset() {
-    this.state = pet.defaults();
+    this.state = game.ensure(pet.defaults());
     this.save();
     this.render();
     this.say('重新开始了', '');
-  },
-
-  goTalk() {
-    wx.navigateTo({ url: '/pages/talk/talk' });
   },
 
   onSwitchAvatar() {
@@ -263,5 +336,13 @@ Page({
     this.setData({ avatar: this.avatar });
     this.render();
     this.say(this.avatar === 'cat' ? '换回猫猫了' : '换成你自己了', 'anim-head');
+  },
+
+  goTalk() {
+    wx.navigateTo({ url: '/pages/talk/talk' });
+  },
+
+  goShop() {
+    wx.navigateTo({ url: '/pages/shop/shop' });
   }
 });
