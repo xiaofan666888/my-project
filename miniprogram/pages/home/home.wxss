@@ -1,0 +1,185 @@
+.container {
+  padding: 32rpx 28rpx 60rpx;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.title {
+  font-size: 34rpx;
+  font-weight: 600;
+}
+
+.since {
+  font-size: 24rpx;
+  color: #8b93a7;
+}
+
+/* 宠物卡片 */
+.pet-card {
+  background: #ffffff;
+  border-radius: 40rpx;
+  padding: 56rpx 40rpx 44rpx;
+  text-align: center;
+  box-shadow: 0 12rpx 48rpx rgba(31, 36, 48, 0.06);
+  margin-bottom: 28rpx;
+}
+
+.pet {
+  font-size: 180rpx;
+  line-height: 1;
+  display: block;
+}
+
+.pet-name {
+  display: block;
+  font-size: 26rpx;
+  color: #8b93a7;
+  margin-top: 20rpx;
+}
+
+.say-wrap {
+  margin-top: 20rpx;
+}
+
+.say {
+  display: inline-block;
+  font-size: 26rpx;
+  background: #f2f4fa;
+  border-radius: 28rpx;
+  padding: 16rpx 24rpx;
+}
+
+/* 数值条 */
+.stats {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 36rpx;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+
+.label {
+  width: 88rpx;
+  font-size: 24rpx;
+  color: #8b93a7;
+  flex: none;
+}
+
+.bar {
+  flex: 1;
+  height: 24rpx;
+  border-radius: 999rpx;
+  background: #eef0f7;
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  border-radius: 999rpx;
+}
+
+.fill-hunger { background: #ff9f43; }
+.fill-clean  { background: #4bc0c0; }
+.fill-mood   { background: #a06bff; }
+
+.val {
+  width: 68rpx;
+  text-align: right;
+  font-size: 24rpx;
+  color: #8b93a7;
+  flex: none;
+}
+
+/* 三个动作 */
+.actions {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 40rpx;
+}
+
+.act {
+  flex: 1;
+  margin: 0 8rpx;
+  padding: 28rpx 0 22rpx;
+  background: #ffffff;
+  border-radius: 32rpx;
+  box-shadow: 0 8rpx 28rpx rgba(31, 36, 48, 0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.4;
+}
+
+.act::after {
+  border: none;
+}
+
+.act[disabled] {
+  opacity: 0.42;
+}
+
+.ico {
+  font-size: 44rpx;
+}
+
+.act-label {
+  font-size: 24rpx;
+  margin-top: 8rpx;
+}
+
+.cd {
+  font-size: 22rpx;
+  color: #8b93a7;
+  min-height: 30rpx;
+}
+
+/* 调试面板 */
+.debug {
+  background: #ffffff;
+  border-radius: 32rpx;
+  padding: 28rpx;
+  box-shadow: 0 8rpx 28rpx rgba(31, 36, 48, 0.06);
+}
+
+.debug-title {
+  display: block;
+  font-size: 24rpx;
+  color: #8b93a7;
+  margin-bottom: 20rpx;
+}
+
+.debug-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.dbg {
+  flex: 1;
+  margin: 0 6rpx;
+  padding: 0;
+  height: 68rpx;
+  line-height: 68rpx;
+  font-size: 24rpx;
+  color: #1f2430;
+  background: #ffffff;
+  border: 1rpx solid #e8ebf3;
+  border-radius: 20rpx;
+}
+
+.dbg::after {
+  border: none;
+}
+
+.dbg-wide {
+  margin: 20rpx 6rpx 0;
+  width: auto;
+}
