@@ -226,6 +226,44 @@
   min-height: 28rpx;
 }
 
+/* ============ 学我说话入口 ============ */
+.entry {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border-radius: 28rpx;
+  padding: 24rpx 28rpx;
+  margin-bottom: 28rpx;
+  box-shadow: 0 8rpx 28rpx rgba(31, 36, 48, 0.06);
+}
+
+.entry-ico {
+  font-size: 40rpx;
+  margin-right: 20rpx;
+}
+
+.entry-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.entry-title {
+  font-size: 28rpx;
+  color: #1f2430;
+}
+
+.entry-sub {
+  font-size: 22rpx;
+  color: #8b93a7;
+  margin-top: 4rpx;
+}
+
+.entry-arrow {
+  font-size: 36rpx;
+  color: #c8cede;
+}
+
 /* ============ 调试面板 ============ */
 .debug {
   background: #ffffff;

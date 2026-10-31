@@ -204,5 +204,9 @@ Page({
     this.state = pet.defaults();
     this.save();
     this.render();
+  },
+
+  goTalk() {
+    wx.navigateTo({ url: '/pages/talk/talk' });
   }
 });

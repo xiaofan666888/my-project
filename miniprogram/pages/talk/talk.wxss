@@ -1,0 +1,138 @@
+.wrap {
+  padding: 24rpx 28rpx 60rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.card {
+  width: 100%;
+  background: #ffffff;
+  border-radius: 36rpx;
+  padding: 32rpx 28rpx 36rpx;
+  box-shadow: 0 10rpx 36rpx rgba(31, 36, 48, 0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 40rpx;
+}
+
+.pet {
+  width: 300rpx;
+  height: 300rpx;
+  animation: breathe 3.6s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+.status {
+  font-size: 28rpx;
+  color: #1f2430;
+  margin-top: 12rpx;
+  text-align: center;
+}
+
+.hint {
+  font-size: 22rpx;
+  color: #8b93a7;
+  margin-top: 10rpx;
+  text-align: center;
+}
+
+/* 麦克风 */
+.mic-wrap {
+  margin-bottom: 44rpx;
+}
+
+.mic {
+  width: 260rpx;
+  height: 260rpx;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 16rpx 44rpx rgba(31, 36, 48, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 4rpx solid #f0f2f8;
+  transition: transform 0.12s ease, background 0.2s ease;
+}
+
+.mic-on {
+  background: #ffe9e9;
+  border-color: #ffb3b3;
+  transform: scale(0.96);
+  animation: pulse 1s ease-in-out infinite;
+}
+
+.mic-busy {
+  opacity: 0.6;
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 120, 120, 0.35); }
+  50% { box-shadow: 0 0 0 24rpx rgba(255, 120, 120, 0); }
+}
+
+.mic-ico {
+  font-size: 72rpx;
+  line-height: 1;
+}
+
+.mic-txt {
+  font-size: 24rpx;
+  color: #8b93a7;
+  margin-top: 12rpx;
+}
+
+/* 音色选择 */
+.voices {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 36rpx;
+}
+
+.chip {
+  flex: 1;
+  margin: 0 8rpx;
+  padding: 18rpx 0;
+  background: #ffffff;
+  border-radius: 24rpx;
+  border: 2rpx solid #eef0f7;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.chip.on {
+  border-color: #a06bff;
+  background: #f7f2ff;
+}
+
+.chip-name {
+  font-size: 24rpx;
+  color: #1f2430;
+}
+
+.chip-sub {
+  font-size: 20rpx;
+  color: #b3b9c9;
+  margin-top: 4rpx;
+}
+
+/* 说明 */
+.tips {
+  width: 100%;
+  padding: 0 12rpx;
+}
+
+.tip-line {
+  display: block;
+  font-size: 22rpx;
+  color: #b3b9c9;
+  line-height: 40rpx;
+}

@@ -1,0 +1,46 @@
+<view class="wrap">
+
+  <view class="card">
+    <image class="pet" src="{{petImg}}" mode="aspectFit" />
+    <view class="status">{{status}}</view>
+    <view class="hint">{{hint}}</view>
+  </view>
+
+  <view class="mic-wrap">
+    <view
+      class="mic {{recording ? 'mic-on' : ''}} {{playing ? 'mic-busy' : ''}}"
+      bindtouchstart="onTouchStart"
+      bindtouchend="onTouchEnd"
+      bindtouchcancel="onTouchEnd"
+    >
+      <text class="mic-ico">🎤</text>
+      <text class="mic-txt">{{recording ? '松手结束' : '按住说话'}}</text>
+    </view>
+  </view>
+
+  <view class="voices">
+    <view class="chip {{rate == 1.7 ? 'on' : ''}}" data-rate="1.7" bindtap="onRate">
+      <text class="chip-name">小猫</text>
+      <text class="chip-sub">x1.7</text>
+    </view>
+    <view class="chip {{rate == 1.45 ? 'on' : ''}}" data-rate="1.45" bindtap="onRate">
+      <text class="chip-name">小孩</text>
+      <text class="chip-sub">x1.45</text>
+    </view>
+    <view class="chip {{rate == 1.0 ? 'on' : ''}}" data-rate="1.0" bindtap="onRate">
+      <text class="chip-name">原声</text>
+      <text class="chip-sub">x1.0</text>
+    </view>
+    <view class="chip {{rate == 0.75 ? 'on' : ''}}" data-rate="0.75" bindtap="onRate">
+      <text class="chip-name">低沉</text>
+      <text class="chip-sub">x0.75</text>
+    </view>
+  </view>
+
+  <view class="tips">
+    <text class="tip-line">· 按住麦克风按钮说话，松开后自动变声播放</text>
+    <text class="tip-line">· 录完可以点上面的音色反复重播</text>
+    <text class="tip-line">· 录音只存在手机本地，不会上传</text>
+  </view>
+
+</view>

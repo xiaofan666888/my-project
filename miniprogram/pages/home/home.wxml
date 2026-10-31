@@ -56,6 +56,15 @@
     </button>
   </view>
 
+  <view class="entry" bindtap="goTalk">
+    <text class="entry-ico">🎤</text>
+    <view class="entry-text">
+      <text class="entry-title">学我说话</text>
+      <text class="entry-sub">按住说一句，它用怪声学你</text>
+    </view>
+    <text class="entry-arrow">›</text>
+  </view>
+
   <view class="debug">
     <text class="debug-title">调试面板（上线前删掉）</text>
     <view class="debug-row">
