@@ -570,3 +570,186 @@
   color: #a3a8b8;
   margin-top: 5rpx;
 }
+
+/* ================= 房间场景 ================= */
+.room {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.room-wall {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 62%;
+  background: linear-gradient(180deg, #fff6ea 0%, #f9e9d8 100%);
+}
+
+.room-wall::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.5) 0 3rpx, rgba(255, 255, 255, 0) 3rpx 76rpx);
+  opacity: 0.5;
+}
+
+/* 窗 */
+.window {
+  position: absolute;
+  left: 56rpx;
+  top: 140rpx;
+  width: 200rpx;
+  height: 270rpx;
+  border-radius: 16rpx;
+  background: linear-gradient(160deg, #eaf6ff 0%, #cfe7ff 62%, #eef8ff 100%);
+  box-shadow: 0 0 0 10rpx #fffaf2, 0 16rpx 40rpx rgba(140, 120, 90, 0.16);
+}
+
+.window-bar-v {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 8rpx;
+  margin-left: -4rpx;
+  background: #fffaf2;
+}
+
+.window-bar-h {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 8rpx;
+  margin-top: -4rpx;
+  background: #fffaf2;
+}
+
+/* 窗光 */
+.beam {
+  position: absolute;
+  left: 140rpx;
+  top: 190rpx;
+  width: 620rpx;
+  height: 900rpx;
+  background: linear-gradient(125deg, rgba(255, 238, 205, 0.5) 0%, rgba(255, 238, 205, 0.16) 46%, rgba(255, 238, 205, 0) 72%);
+  transform: rotate(16deg);
+}
+
+/* 地板与踢脚线 */
+.room-floor {
+  position: absolute;
+  left: -30%;
+  right: -30%;
+  top: 62%;
+  height: 70%;
+  background: linear-gradient(180deg, #eed9bd 0%, #d8bb98 100%);
+  transform: perspective(900rpx) rotateX(62deg);
+  transform-origin: top center;
+}
+
+.room-floor::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(90deg, rgba(140, 105, 70, 0.16) 0 2rpx, rgba(140, 105, 70, 0) 2rpx 96rpx);
+}
+
+.room-base {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 62%;
+  height: 16rpx;
+  margin-top: -8rpx;
+  background: linear-gradient(180deg, #fdf0e0, #e6cdb0);
+  box-shadow: 0 8rpx 16rpx rgba(120, 90, 60, 0.14);
+}
+
+/* 盆栽 */
+.plant {
+  position: absolute;
+  right: 56rpx;
+  top: calc(62% - 168rpx);
+  width: 120rpx;
+  height: 168rpx;
+}
+
+.leaf {
+  position: absolute;
+  width: 64rpx;
+  height: 96rpx;
+  border-radius: 50% 50% 46% 46% / 62% 62% 38% 38%;
+  background: linear-gradient(180deg, #9ad79a, #63b06e);
+}
+
+.leaf-a { left: 0; bottom: 54rpx; transform: rotate(-18deg); }
+.leaf-b { left: 30rpx; bottom: 66rpx; width: 58rpx; height: 112rpx; transform: rotate(4deg); }
+.leaf-c { right: 0; bottom: 54rpx; transform: rotate(20deg); }
+
+.pot {
+  position: absolute;
+  left: 18rpx;
+  bottom: 0;
+  width: 84rpx;
+  height: 66rpx;
+  border-radius: 0 0 20rpx 20rpx;
+  background: linear-gradient(180deg, #e8a87c, #cf8657);
+}
+
+/* 浮尘 */
+.mote {
+  position: absolute;
+  width: 10rpx;
+  height: 10rpx;
+  border-radius: 50%;
+  background: rgba(255, 248, 230, 0.95);
+  animation: drift 9s ease-in-out infinite;
+}
+
+.mote-a { left: 24%; top: 32%; }
+.mote-b { left: 64%; top: 26%; animation-delay: 2.2s; animation-duration: 11s; }
+.mote-c { left: 46%; top: 44%; animation-delay: 4.5s; animation-duration: 13s; }
+
+@keyframes drift {
+  0%, 100% { transform: translate(0, 0); opacity: 0.2; }
+  50% { transform: translate(26rpx, -44rpx); opacity: 0.85; }
+}
+
+/* 地毯 */
+.rug {
+  position: absolute;
+  bottom: 4rpx;
+  left: 50%;
+  margin-left: -272rpx;
+  width: 544rpx;
+  height: 152rpx;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 36%, #ffe3d0 0%, #f7bd9d 60%, #e9a785 100%);
+  box-shadow: 0 22rpx 44rpx rgba(170, 110, 80, 0.22);
+  z-index: 0;
+}
+
+.pet-glow {
+  z-index: 0;
+}
+
+.pet-wrap {
+  z-index: 1;
+}
+
+.ground {
+  z-index: 1;
+}

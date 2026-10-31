@@ -1,6 +1,27 @@
 <view class="page">
-  <view class="glow-a"></view>
-  <view class="glow-b"></view>
+
+  <!-- 房间场景 -->
+  <view class="room">
+    <view class="room-wall"></view>
+    <view class="window">
+      <view class="window-bar-v"></view>
+      <view class="window-bar-h"></view>
+    </view>
+    <view class="beam"></view>
+    <view class="room-floor"></view>
+    <view class="room-base"></view>
+
+    <view class="plant">
+      <view class="leaf leaf-a"></view>
+      <view class="leaf leaf-b"></view>
+      <view class="leaf leaf-c"></view>
+      <view class="pot"></view>
+    </view>
+
+    <view class="mote mote-a"></view>
+    <view class="mote mote-b"></view>
+    <view class="mote mote-c"></view>
+  </view>
 
   <view class="container">
 
@@ -36,6 +57,7 @@
       <view class="bubble {{bubbleOn ? 'on' : ''}}">{{say}}</view>
 
       <view class="pet-area">
+        <view class="rug"></view>
         <view class="pet-glow"></view>
 
         <view class="pet-wrap {{anim}}">
