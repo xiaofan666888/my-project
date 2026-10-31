@@ -4,9 +4,15 @@ const STORE_KEY = 'pet_state_v1';
 
 // 不同部位的台词。同一部位给几句，避免每次反应都一样。
 const REACTIONS = {
-  head: ['别戳我的头！', '晕了晕了…', '哎哟！'],
-  belly: ['痒痒的～', '嘿嘿嘿', '别挠了别挠了'],
-  feet: ['别碰我的脚！', '哈哈哈', '站不稳了…']
+  head: ['别戳我的头！', '晕了晕了…', '哎哟！', '头发要乱了'],
+  belly: ['痒痒的～', '杨珺瑞', '别挠了别挠了', '好痒！'],
+  feet: ['别碰我的脚！', '哈哈哈', '站不稳了…', '怕痒']
+};
+
+const PARTICLE_ICONS = {
+  head: ['💫', '✨', '⭐'],
+  belly: ['❤️', '💕', '✨'],
+  feet: ['⭐', '💨', '✨']
 };
 
 function pick(arr) {
@@ -21,6 +27,15 @@ function expressionOf(s) {
   return 'normal';
 }
 
+/** 数值 → 状态文案 */
+function moodTextOf(s) {
+  if (s.hunger < 20) return '饿到没力气';
+  if (s.clean < 20) return '身上脏脏的';
+  if (s.mood > 78) return '心情超好';
+  if (s.mood < 28) return '有点低落';
+  return '看起来还不错';
+}
+
 Page({
   data: {
     hunger: 80,
@@ -32,6 +47,8 @@ Page({
     bubbleOn: false,
     anim: '',
     since: '刚刚',
+    moodText: '看起来还不错',
+    particles: [],
     disFeed: false,
     disBath: false,
     disPlay: false,
@@ -42,6 +59,7 @@ Page({
 
   onLoad() {
     this.avatar = wx.getStorageSync('avatar_v1') || 'cat';
+    this.pid = 0;
     this.setData({ avatar: this.avatar });
     this.loadState();
     this.render();
@@ -63,6 +81,7 @@ Page({
   onUnload() {
     this.stopTimer();
     clearTimeout(this._animT);
+    clearTimeout(this._pT);
   },
 
   stopTimer() {
@@ -100,6 +119,7 @@ Page({
       hunger: Math.round(s.hunger),
       clean: Math.round(s.clean),
       mood: Math.round(s.mood),
+      moodText: moodTextOf(s),
       petImg: '/images/' + this.avatar + '/' + this.avatar + '-' + expressionOf(s) + '.png',
       since: pet.sinceText(s.lastTick),
       disFeed: !!left.feed,
@@ -116,6 +136,23 @@ Page({
     }
 
     this.setData(patch);
+  },
+
+  /** 点一下飘出几个小图标 */
+  spawnParticles(part) {
+    const icons = PARTICLE_ICONS[part] || ['✨'];
+    const list = [];
+    for (let i = 0; i < 3; i++) {
+      list.push({
+        id: this.pid++,
+        icon: icons[i % icons.length],
+        x: 150 + Math.round(Math.random() * 140),
+        delay: i * 70
+      });
+    }
+    this.setData({ particles: list });
+    clearTimeout(this._pT);
+    this._pT = setTimeout(() => this.setData({ particles: [] }), 1100);
   },
 
   /** 说一句话 + 播一个动画 */
@@ -164,6 +201,7 @@ Page({
     this.save();
 
     this.say(text, anim);
+    this.spawnParticles(part);
     this.render();
 
     if (wx.vibrateShort) {
@@ -192,7 +230,10 @@ Page({
       bath: ['舒服～', '干净了！', '别弄我头发'],
       play: ['再来一次！', '好玩好玩', '累死我了']
     };
-    this.say(pick(lines[name] || ['嗯']), 'anim-' + (name === 'bath' ? 'belly' : name === 'play' ? 'feet' : 'head'));
+    const animMap = { feed: 'anim-head', bath: 'anim-belly', play: 'anim-feet' };
+
+    this.say(pick(lines[name] || ['嗯']), animMap[name]);
+    this.spawnParticles(name === 'bath' ? 'belly' : name === 'play' ? 'feet' : 'head');
     this.render();
   },
 
@@ -201,12 +242,15 @@ Page({
     this.state = pet.settle(this.state, Date.now() + seconds * 1000);
     this.save();
     this.render();
+    const label = seconds >= 86400 ? (seconds / 86400) + ' 天' : (seconds / 3600) + ' 小时';
+    this.say('时间快进了 ' + label, '');
   },
 
   onReset() {
     this.state = pet.defaults();
     this.save();
     this.render();
+    this.say('重新开始了', '');
   },
 
   goTalk() {

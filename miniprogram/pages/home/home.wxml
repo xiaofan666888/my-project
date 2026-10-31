@@ -1,80 +1,101 @@
-<view class="container">
+<view class="page">
+  <view class="glow-a"></view>
+  <view class="glow-b"></view>
 
-  <view class="top">
-    <text class="title">我的宠物</text>
-    <text class="since">{{since}}</text>
-  </view>
+  <view class="container">
 
-  <!-- 舞台：宠物 + 气泡 + 三个触摸热区 -->
-  <view class="stage">
-    <view class="bubble {{bubbleOn ? 'bubble-on' : ''}}">{{say}}</view>
-
-    <view class="pet-wrap {{anim}}">
-      <image class="pet-img" src="{{petImg}}" mode="aspectFit" />
-      <view class="hot hot-head" data-part="head" bindtap="onTouch"></view>
-      <view class="hot hot-belly" data-part="belly" bindtap="onTouch"></view>
-      <view class="hot hot-feet" data-part="feet" bindtap="onTouch"></view>
+    <view class="topbar">
+      <view class="who">
+        <text class="who-name">小名还没起</text>
+        <text class="who-sub">{{moodText}}</text>
+      </view>
+      <text class="since">{{since}}</text>
     </view>
 
-    <text class="hint">戳戳它</text>
-  </view>
+    <view class="stage">
+      <view class="bubble {{bubbleOn ? 'on' : ''}}">{{say}}</view>
 
-  <!-- 数值：现在只是"情绪底色"，不再是压力条 -->
-  <view class="stats">
-    <view class="stat">
-      <text class="label">饱食</text>
-      <view class="bar"><view class="fill fill-hunger" style="width:{{hunger}}%"></view></view>
-      <text class="val">{{hunger}}</text>
-    </view>
-    <view class="stat">
-      <text class="label">清洁</text>
-      <view class="bar"><view class="fill fill-clean" style="width:{{clean}}%"></view></view>
-      <text class="val">{{clean}}</text>
-    </view>
-    <view class="stat">
-      <text class="label">心情</text>
-      <view class="bar"><view class="fill fill-mood" style="width:{{mood}}%"></view></view>
-      <text class="val">{{mood}}</text>
-    </view>
-  </view>
+      <view class="pet-area">
+        <view class="pet-glow"></view>
 
-  <view class="actions">
-    <button class="act" data-act="feed" bindtap="onAction" disabled="{{disFeed}}">
-      <text class="ico">🍖</text>
-      <text class="act-label">喂食</text>
-      <text class="cd">{{cdFeed}}</text>
-    </button>
-    <button class="act" data-act="bath" bindtap="onAction" disabled="{{disBath}}">
-      <text class="ico">🛁</text>
-      <text class="act-label">洗澡</text>
-      <text class="cd">{{cdBath}}</text>
-    </button>
-    <button class="act" data-act="play" bindtap="onAction" disabled="{{disPlay}}">
-      <text class="ico">🎾</text>
-      <text class="act-label">陪玩</text>
-      <text class="cd">{{cdPlay}}</text>
-    </button>
-  </view>
+        <view class="pet-wrap {{anim}}">
+          <image class="pet-img" src="{{petImg}}" mode="aspectFit" />
+          <view class="hot hot-head" data-part="head" bindtap="onTouch"></view>
+          <view class="hot hot-belly" data-part="belly" bindtap="onTouch"></view>
+          <view class="hot hot-feet" data-part="feet" bindtap="onTouch"></view>
+        </view>
 
-  <view class="entry" bindtap="goTalk">
-    <text class="entry-ico">🎤</text>
-    <view class="entry-text">
-      <text class="entry-title">学我说话</text>
-      <text class="entry-sub">按住说一句，它用怪声学你</text>
+        <view class="ground"></view>
+
+        <view
+          wx:for="{{particles}}"
+          wx:key="id"
+          class="particle"
+          style="left:{{item.x}}rpx; animation-delay:{{item.delay}}ms"
+        >{{item.icon}}</view>
+      </view>
+
+      <text class="hint">戳戳它</text>
     </view>
-    <text class="entry-arrow">›</text>
-  </view>
 
-  <view class="debug">
-    <text class="debug-title">调试面板（上线前删掉）</text>
-    <view class="debug-row">
-      <button class="dbg" data-skip="3600" bindtap="onSkip">1 小时</button>
-      <button class="dbg" data-skip="21600" bindtap="onSkip">6 小时</button>
-      <button class="dbg" data-skip="86400" bindtap="onSkip">1 天</button>
-      <button class="dbg" data-skip="259200" bindtap="onSkip">3 天</button>
+    <view class="panel">
+      <view class="stat">
+        <text class="stat-ico">🍖</text>
+        <view class="bar"><view class="fill fill-hunger" style="width:{{hunger}}%"></view></view>
+        <text class="stat-val">{{hunger}}</text>
+      </view>
+      <view class="stat">
+        <text class="stat-ico">🫧</text>
+        <view class="bar"><view class="fill fill-clean" style="width:{{clean}}%"></view></view>
+        <text class="stat-val">{{clean}}</text>
+      </view>
+      <view class="stat">
+        <text class="stat-ico">💛</text>
+        <view class="bar"><view class="fill fill-mood" style="width:{{mood}}%"></view></view>
+        <text class="stat-val">{{mood}}</text>
+      </view>
     </view>
-    <button class="dbg dbg-wide" bindtap="onReset">重置数据</button>
-    <button class="dbg dbg-wide" bindtap="onSwitchAvatar">切换形象：{{avatar === 'cat' ? '猫' : '我'}}</button>
-  </view>
 
+    <view class="actions">
+      <view class="act {{disFeed ? 'off' : ''}}" data-act="feed" bindtap="onAction">
+        <text class="act-ico">🍖</text>
+        <text class="act-name">喂食</text>
+        <text class="act-cd">{{cdFeed || '＋饱食'}}</text>
+      </view>
+      <view class="act {{disBath ? 'off' : ''}}" data-act="bath" bindtap="onAction">
+        <text class="act-ico">🛁</text>
+        <text class="act-name">洗澡</text>
+        <text class="act-cd">{{cdBath || '＋清洁'}}</text>
+      </view>
+      <view class="act {{disPlay ? 'off' : ''}}" data-act="play" bindtap="onAction">
+        <text class="act-ico">🎾</text>
+        <text class="act-name">陪玩</text>
+        <text class="act-cd">{{cdPlay || '＋心情'}}</text>
+      </view>
+    </view>
+
+    <view class="entry" bindtap="goTalk">
+      <view class="entry-ico-wrap"><text class="entry-ico">🎤</text></view>
+      <view class="entry-text">
+        <text class="entry-title">学我说话</text>
+        <text class="entry-sub">按住说一句，它用怪声学你</text>
+      </view>
+      <text class="entry-arrow">›</text>
+    </view>
+
+    <view class="debug">
+      <text class="debug-title">调试</text>
+      <view class="debug-row">
+        <view class="dbg" data-skip="3600" bindtap="onSkip">1 小时</view>
+        <view class="dbg" data-skip="21600" bindtap="onSkip">6 小时</view>
+        <view class="dbg" data-skip="86400" bindtap="onSkip">1 天</view>
+        <view class="dbg" data-skip="259200" bindtap="onSkip">3 天</view>
+      </view>
+      <view class="debug-row">
+        <view class="dbg" bindtap="onSwitchAvatar">形象：{{avatar === 'cat' ? '猫' : '我'}}</view>
+        <view class="dbg" bindtap="onReset">重置</view>
+      </view>
+    </view>
+
+  </view>
 </view>
