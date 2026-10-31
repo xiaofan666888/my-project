@@ -1,0 +1,52 @@
+<view class="page">
+
+  <view class="hud">
+    <view class="hud-card">
+      <text class="hud-label">分数</text>
+      <text class="hud-val">{{score}}</text>
+    </view>
+
+    <view class="timer {{time <= 5 && playing ? 'urgent' : ''}}">{{time}}s</view>
+
+    <view class="hud-card">
+      <text class="hud-label">最佳</text>
+      <text class="hud-val">{{best}}</text>
+    </view>
+  </view>
+
+  <view class="arena">
+    <view
+      wx:for="{{items}}"
+      wx:key="id"
+      class="item {{item.bad ? 'bad' : ''}}"
+      style="left:{{item.x}}%; animation-duration:{{item.dur}}ms"
+      data-id="{{item.id}}"
+      data-bad="{{item.bad}}"
+      bindtap="onCatch"
+      bindanimationend="onMiss"
+    >{{item.icon}}</view>
+
+    <view class="basket">🧺</view>
+
+    <view class="overlay" wx:if="{{!playing && !showResult}}">
+      <text class="ov-title">接住掉下来的食物</text>
+      <text class="ov-sub">点一下就能接住</text>
+      <text class="ov-sub warn">别碰 💣</text>
+      <view class="ov-btn" bindtap="onStart">{{started ? '再来一局' : '开始游戏'}}</view>
+      <text class="ov-tip">每 2 分换 1 枚金币，单局最多 15 枚</text>
+    </view>
+  </view>
+
+  <view class="result" wx:if="{{showResult}}">
+    <view class="res-card">
+      <text class="res-title">{{score >= 20 ? '手速惊人' : score >= 10 ? '还不错' : '再来一次吧'}}</text>
+      <text class="res-score">{{score}}<text class="res-unit"> 分</text></text>
+      <text class="res-coins">获得 🪙 {{coinsEarned}}</text>
+      <view class="res-btns">
+        <view class="res-btn ghost" bindtap="onClose">返回</view>
+        <view class="res-btn" bindtap="onStart">再来一局</view>
+      </view>
+    </view>
+  </view>
+
+</view>

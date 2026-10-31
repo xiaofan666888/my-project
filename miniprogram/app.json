@@ -2,7 +2,8 @@
   "pages": [
     "pages/home/home",
     "pages/talk/talk",
-    "pages/shop/shop"
+    "pages/shop/shop",
+    "pages/game/game"
   ],
   "window": {
     "navigationBarTitleText": "我的宠物",

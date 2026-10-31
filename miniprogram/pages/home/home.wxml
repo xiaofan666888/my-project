@@ -105,6 +105,11 @@
         <text class="entry-title">小卖部</text>
         <text class="entry-sub">买点吃的</text>
       </view>
+      <view class="entry-card" bindtap="goGame">
+        <view class="entry-ico-wrap play"><text class="entry-ico">🎮</text></view>
+        <text class="entry-title">接住！</text>
+        <text class="entry-sub">30 秒小游戏</text>
+      </view>
     </view>
 
     <view class="debug">

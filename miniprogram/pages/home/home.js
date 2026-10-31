@@ -344,5 +344,9 @@ Page({
 
   goShop() {
     wx.navigateTo({ url: '/pages/shop/shop' });
+  },
+
+  goGame() {
+    wx.navigateTo({ url: '/pages/game/game' });
   }
 });

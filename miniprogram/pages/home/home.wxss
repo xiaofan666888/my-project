@@ -555,6 +555,11 @@
   box-shadow: 0 8rpx 18rpx rgba(247, 155, 60, 0.26);
 }
 
+.entry-ico-wrap.play {
+  background: linear-gradient(135deg, #86b6ff, #5b7cfa);
+  box-shadow: 0 8rpx 18rpx rgba(91, 124, 250, 0.26);
+}
+
 .entry-title {
   font-size: 25rpx;
   color: #22202b;
