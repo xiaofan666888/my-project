@@ -5,36 +5,35 @@
     <text class="since">{{since}}</text>
   </view>
 
-  <view class="pet-card">
-    <text class="pet">{{face}}</text>
-    <text class="pet-name">小名还没起</text>
-    <view class="say-wrap">
-      <text class="say">{{say}}</text>
+  <!-- 舞台：宠物 + 气泡 + 三个触摸热区 -->
+  <view class="stage">
+    <view class="bubble {{bubbleOn ? 'bubble-on' : ''}}">{{say}}</view>
+
+    <view class="pet-wrap {{anim}}">
+      <image class="pet-img" src="/images/pet-minion.png" mode="aspectFit" />
+      <view class="hot hot-head" data-part="head" bindtap="onTouch"></view>
+      <view class="hot hot-belly" data-part="belly" bindtap="onTouch"></view>
+      <view class="hot hot-feet" data-part="feet" bindtap="onTouch"></view>
     </view>
+
+    <text class="hint">戳戳它</text>
   </view>
 
+  <!-- 数值：现在只是"情绪底色"，不再是压力条 -->
   <view class="stats">
     <view class="stat">
       <text class="label">饱食</text>
-      <view class="bar">
-        <view class="fill fill-hunger" style="width:{{hunger}}%"></view>
-      </view>
+      <view class="bar"><view class="fill fill-hunger" style="width:{{hunger}}%"></view></view>
       <text class="val">{{hunger}}</text>
     </view>
-
     <view class="stat">
       <text class="label">清洁</text>
-      <view class="bar">
-        <view class="fill fill-clean" style="width:{{clean}}%"></view>
-      </view>
+      <view class="bar"><view class="fill fill-clean" style="width:{{clean}}%"></view></view>
       <text class="val">{{clean}}</text>
     </view>
-
     <view class="stat">
       <text class="label">心情</text>
-      <view class="bar">
-        <view class="fill fill-mood" style="width:{{mood}}%"></view>
-      </view>
+      <view class="bar"><view class="fill fill-mood" style="width:{{mood}}%"></view></view>
       <text class="val">{{mood}}</text>
     </view>
   </view>
@@ -45,13 +44,11 @@
       <text class="act-label">喂食</text>
       <text class="cd">{{cdFeed}}</text>
     </button>
-
     <button class="act" data-act="bath" bindtap="onAction" disabled="{{disBath}}">
       <text class="ico">🛁</text>
       <text class="act-label">洗澡</text>
       <text class="cd">{{cdBath}}</text>
     </button>
-
     <button class="act" data-act="play" bindtap="onAction" disabled="{{disPlay}}">
       <text class="ico">🎾</text>
       <text class="act-label">陪玩</text>

@@ -34,3 +34,7 @@ desktop.ini
 *.sqlite
 *.sqlite3
 *.db
+# 版权素材：仅本地测试，禁止提交
+miniprogram/images/pet-minion.png
+# 微信开发者工具的本地私有配置
+miniprogram/project.private.config.json
