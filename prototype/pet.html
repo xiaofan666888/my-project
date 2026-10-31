@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>我的宠物 · 数值原型</title>
+<style>
+  :root{
+    --bg:#f6f7fb;
+    --card:#ffffff;
+    --ink:#1f2430;
+    --muted:#8b93a7;
+    --line:#e8ebf3;
+    --hunger:#ff9f43;
+    --clean:#4bc0c0;
+    --mood:#a06bff;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    display:flex;justify-content:center;
+  }
+  .phone{width:100%;max-width:420px;min-height:100vh;padding:20px 18px 32px;}
+  .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+  .top h1{font-size:17px;margin:0;font-weight:600;letter-spacing:.5px;}
+  .top .since{font-size:12px;color:var(--muted);}
+  .pet-wrap{
+    background:var(--card);border-radius:24px;padding:28px 20px 22px;
+    text-align:center;box-shadow:0 6px 24px rgba(31,36,48,.06);margin-bottom:14px;
+  }
+  .pet{font-size:92px;line-height:1;transition:transform .25s ease;display:inline-block;}
+  .pet.bounce{transform:scale(1.12) translateY(-6px);}
+  .pet-name{font-size:14px;color:var(--muted);margin-top:10px;}
+  .say{
+    margin-top:10px;font-size:13px;color:var(--ink);
+    background:#f2f4fa;border-radius:14px;padding:9px 12px;display:inline-block;
+    min-height:20px;
+  }
+  .stats{display:flex;flex-direction:column;gap:12px;margin:16px 0 18px;}
+  .stat{display:flex;align-items:center;gap:10px;}
+  .stat .label{width:44px;font-size:12px;color:var(--muted);flex:none;}
+  .bar{flex:1;height:12px;border-radius:999px;background:#eef0f7;overflow:hidden;}
+  .bar > i{display:block;height:100%;border-radius:999px;transition:width .4s ease;}
+  .stat .val{width:34px;text-align:right;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;flex:none;}
+  .b-hunger > i{background:var(--hunger);}
+  .b-clean  > i{background:var(--clean);}
+  .b-mood   > i{background:var(--mood);}
+  .actions{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;}
+  .act{
+    border:none;border-radius:18px;padding:14px 8px;background:var(--card);
+    box-shadow:0 4px 14px rgba(31,36,48,.06);cursor:pointer;
+    display:flex;flex-direction:column;align-items:center;gap:6px;
+    font-size:12px;color:var(--ink);transition:transform .15s ease,opacity .15s;
+  }
+  .act:active{transform:scale(.95);}
+  .act .ico{font-size:22px;}
+  .act:disabled{opacity:.42;cursor:not-allowed;}
+  .act .cd{font-size:11px;color:var(--muted);}
+  .debug{
+    background:var(--card);border-radius:18px;padding:14px;
+    box-shadow:0 4px 14px rgba(31,36,48,.06);
+  }
+  .debug h2{font-size:12px;color:var(--muted);margin:0 0 10px;font-weight:500;letter-spacing:.5px;}
+  .debug-row{display:flex;gap:8px;flex-wrap:wrap;}
+  .dbg{
+    border:1px solid var(--line);background:#fff;border-radius:12px;
+    padding:9px 12px;font-size:12px;color:var(--ink);cursor:pointer;flex:1;
+  }
+  .dbg:active{background:#f2f4fa;}
+  .tip{font-size:11px;color:var(--muted);line-height:1.7;margin-top:12px;}
+  .toast{
+    position:fixed;left:50%;top:18%;transform:translate(-50%,-8px);
+    background:rgba(31,36,48,.9);color:#fff;font-size:13px;
+    padding:10px 16px;border-radius:12px;opacity:0;pointer-events:none;
+    transition:opacity .2s,transform .2s;z-index:9;
+  }
+  .toast.on{opacity:1;transform:translate(-50%,0);}
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <div class="top">
+    <h1>我的宠物</h1>
+    <span class="since" id="since">刚刚</span>
+  </div>
+
+  <div class="pet-wrap">
+    <div class="pet" id="pet">🐣</div>
+    <div class="pet-name">小名还没起</div>
+    <div class="say" id="say">你好呀</div>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <span class="label">饱食</span>
+      <div class="bar b-hunger"><i id="bar-hunger" style="width:80%"></i></div>
+      <span class="val" id="val-hunger">80</span>
+    </div>
+    <div class="stat">
+      <span class="label">清洁</span>
+      <div class="bar b-clean"><i id="bar-clean" style="width:80%"></i></div>
+      <span class="val" id="val-clean">80</span>
+    </div>
+    <div class="stat">
+      <span class="label">心情</span>
+      <div class="bar b-mood"><i id="bar-mood" style="width:70%"></i></div>
+      <span class="val" id="val-mood">70</span>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="act" data-act="feed"><span class="ico">🍖</span><span>喂食</span><span class="cd" id="cd-feed"></span></button>
+    <button class="act" data-act="bath"><span class="ico">🛁</span><span>洗澡</span><span class="cd" id="cd-bath"></span></button>
+    <button class="act" data-act="play"><span class="ico">🎾</span><span>陪玩</span><span class="cd" id="cd-play"></span></button>
+  </div>
+
+  <div class="debug">
+    <h2>调试面板（上线前删掉）</h2>
+    <div class="debug-row">
+      <button class="dbg" data-skip="3600">快进 1 小时</button>
+      <button class="dbg" data-skip="21600">快进 6 小时</button>
+      <button class="dbg" data-skip="86400">快进 1 天</button>
+    </div>
+    <div class="debug-row" style="margin-top:8px;">
+      <button class="dbg" data-reset="1">重置数据</button>
+    </div>
+    <div class="tip">
+      这个页面只验证数值手感，没有后端。<br>
+      关掉再打开，看宠物会不会因为"你离开太久"而变脏变饿——这就是离线结算。
+    </div>
+  </div>
+
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================= 数值配置：改这里就行 ================= */
+const CONFIG = {
+  /* 每小时衰减多少点（0-100）
+     ⚠️ 这组数是模拟后调过的。原来用的 3/2/1，结果 24 小时不打开心情就归零，
+        等于惩罚玩家。现在这组：一天不看大概掉到一半，两天不看才明显告急。 */
+  decayPerHour: {
+    hunger: 1.5,    // 约 53 小时从 100 饿到 0
+    clean: 1,       // 约 80 小时从 100 脏到 0
+    mood: 0.5,      // 基础心情衰减
+    moodPenalty: 1.5, // 饥饿或清洁低于阈值时的额外心情衰减
+    penaltyBelow: 30
+  },
+  // 初始值
+  initial: { hunger: 80, clean: 80, mood: 70 },
+  // 三个动作
+  actions: {
+    feed: { hunger: +30, mood: +2,  cooldownSec: 30 },
+    bath: { clean:  +35, mood: +3,  cooldownSec: 60 },
+    play: { mood:   +25, hunger: -8, clean: -5, cooldownSec: 45 }
+  },
+  // 动作的冷却是否跨会话保留（true = 关掉再打开也没法跳过冷却）
+  persistCooldown: true
+};
+/* ======================================================= */
+
+const STORE_KEY = 'pet_proto_v1';
+const clamp = (v) => Math.max(0, Math.min(100, v));
+
+let state = load();
+
+function defaults() {
+  return {
+    ...CONFIG.initial,
+    lastTick: Date.now(),
+    cd: { feed: 0, bath: 0, play: 0 }
+  };
+}
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (!raw) return defaults();
+    const s = JSON.parse(raw);
+    // 关键：读出来先结算离线期间的变化
+    return settle(s, Date.now());
+  } catch (e) {
+    return defaults();
+  }
+}
+
+function save() {
+  const s = CONFIG.persistCooldown ? state : { ...state, cd: { feed: 0, bath: 0, play: 0 } };
+  localStorage.setItem(STORE_KEY, JSON.stringify(s));
+}
+
+/** 按经过的秒数结算衰减 —— 这就是"离线也在成长"的核心
+ *  分段结算：每段最多 1 小时。
+ *  不分段的话，会因为"最终状态低于阈值"就把惩罚平摊到整段时间，
+ *  等于把"饿了 3 小时"当成"饿了 3 天"，对久未上线的玩家极不公平。 */
+function settle(s, now) {
+  let seconds = Math.max(0, (now - s.lastTick) / 1000);
+  const d = CONFIG.decayPerHour;
+  const next = { ...s };
+
+  while (seconds > 0) {
+    const step = Math.min(seconds, 3600);
+    const hours = step / 3600;
+
+    next.hunger = clamp(next.hunger - d.hunger * hours);
+    next.clean = clamp(next.clean - d.clean * hours);
+
+    let moodDrop = d.mood * hours;
+    if (next.hunger < d.penaltyBelow || next.clean < d.penaltyBelow) {
+      moodDrop += d.moodPenalty * hours;
+    }
+    next.mood = clamp(next.mood - moodDrop);
+
+    seconds -= step;
+  }
+
+  next.lastTick = now;
+  return next;
+}
+
+function faceOf(s) {
+  if (s.hunger < 15 || s.clean < 15) return '😫';
+  if (s.mood < 20) return '😭';
+  if (s.mood < 40) return '😢';
+  if (s.hunger < 35) return '😋';
+  if (s.clean < 35) return '🫠';
+  if (s.mood > 75) return '🥰';
+  if (s.mood > 55) return '😊';
+  return '😐';
+}
+
+function wordsOf(s) {
+  if (s.hunger < 20) return '我饿了…';
+  if (s.clean < 20) return '身上好脏…';
+  if (s.mood < 25) return '有点难过';
+  if (s.mood > 80) return '今天很开心！';
+  return '你好呀';
+}
+
+function render() {
+  for (const k of ['hunger', 'clean', 'mood']) {
+    const v = Math.round(state[k]);
+    document.getElementById('bar-' + k).style.width = v + '%';
+    document.getElementById('val-' + k).textContent = v;
+  }
+  document.getElementById('pet').textContent = faceOf(state);
+  document.getElementById('say').textContent = wordsOf(state);
+
+  const now = Date.now();
+  const sinceSec = Math.round((now - state.lastTick) / 1000);
+  const sinceEl = document.getElementById('since');
+  if (sinceSec < 5) sinceEl.textContent = '刚刚';
+  else if (sinceSec < 3600) sinceEl.textContent = Math.floor(sinceSec / 60) + ' 分钟前';
+  else if (sinceSec < 86400) sinceEl.textContent = Math.floor(sinceSec / 3600) + ' 小时前';
+  else sinceEl.textContent = Math.floor(sinceSec / 86400) + ' 天前';
+
+  for (const name of Object.keys(CONFIG.actions)) {
+    const btn = document.querySelector('.act[data-act="' + name + '"]');
+    const cdEl = document.getElementById('cd-' + name);
+    const leftMs = (state.cd[name] || 0) - now;
+    if (leftMs > 0) {
+      btn.disabled = true;
+      cdEl.textContent = Math.ceil(leftMs / 1000) + 's';
+    } else {
+      btn.disabled = false;
+      cdEl.textContent = '';
+    }
+  }
+}
+
+function tick() {
+  state = settle(state, Date.now());
+  save();
+  render();
+}
+
+function doAction(name) {
+  const cfg = CONFIG.actions[name];
+  if (!cfg) return;
+  if ((state.cd[name] || 0) > Date.now()) return;
+
+  state = settle(state, Date.now());
+  for (const [k, delta] of Object.entries(cfg)) {
+    if (k === 'cooldownSec') continue;
+    state[k] = clamp(state[k] + delta);
+  }
+  state.cd[name] = Date.now() + cfg.cooldownSec * 1000;
+
+  const pet = document.getElementById('pet');
+  pet.classList.add('bounce');
+  setTimeout(() => pet.classList.remove('bounce'), 260);
+
+  save();
+  render();
+  toast('做了' + ({ feed: '喂食', bath: '洗澡', play: '陪玩' }[name]));
+}
+
+function skip(seconds) {
+  state = settle(state, Date.now() + seconds * 1000);
+  save();
+  render();
+  toast('时间快进了 ' + (seconds >= 86400 ? seconds / 86400 + ' 天' : seconds / 3600 + ' 小时'));
+}
+
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('on');
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove('on'), 1400);
+}
+
+document.querySelectorAll('.act').forEach((b) =>
+  b.addEventListener('click', () => doAction(b.dataset.act))
+);
+document.querySelectorAll('[data-skip]').forEach((b) =>
+  b.addEventListener('click', () => skip(Number(b.dataset.skip)))
+);
+document.querySelector('[data-reset]').addEventListener('click', () => {
+  state = defaults();
+  save();
+  render();
+  toast('已重置');
+});
+
+render();
+setInterval(tick, 1000);
+// 切回页面时立刻结算，保证不会显示过期数值
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) tick();
+});
+</script>
+</body>
+</html>
