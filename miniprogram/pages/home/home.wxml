@@ -10,7 +10,7 @@
     <view class="bubble {{bubbleOn ? 'bubble-on' : ''}}">{{say}}</view>
 
     <view class="pet-wrap {{anim}}">
-      <image class="pet-img" src="/images/pet-minion.png" mode="aspectFit" />
+      <image class="pet-img" src="{{petImg}}" mode="aspectFit" />
       <view class="hot hot-head" data-part="head" bindtap="onTouch"></view>
       <view class="hot hot-belly" data-part="belly" bindtap="onTouch"></view>
       <view class="hot hot-feet" data-part="feet" bindtap="onTouch"></view>

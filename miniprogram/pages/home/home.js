@@ -13,11 +13,20 @@ function pick(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
+/** 数值 → 表情。这就是"情绪底色"的具体落地 */
+function expressionOf(s) {
+  if (s.mood < 22) return 'sad';
+  if (s.hunger < 18 || s.clean < 18) return 'angry';
+  if (s.mood > 76 && s.hunger > 40 && s.clean > 40) return 'happy';
+  return 'normal';
+}
+
 Page({
   data: {
     hunger: 80,
     clean: 80,
     mood: 70,
+    petImg: '/images/cat/cat-normal.png',
     say: '戳戳我',
     bubbleOn: false,
     anim: '',
@@ -88,6 +97,7 @@ Page({
       hunger: Math.round(s.hunger),
       clean: Math.round(s.clean),
       mood: Math.round(s.mood),
+      petImg: '/images/cat/cat-' + expressionOf(s) + '.png',
       since: pet.sinceText(s.lastTick),
       disFeed: !!left.feed,
       disBath: !!left.bath,
