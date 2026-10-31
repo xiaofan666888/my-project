@@ -51,7 +51,7 @@ Page({
     coins: 0,
     level: 1,
     title: '陌生人',
-    name: '小名还没起',
+    name: '小明',
     tasks: [],
     tasksDone: 0,
     expPct: 0,

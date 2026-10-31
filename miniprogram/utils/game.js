@@ -65,9 +65,12 @@ function yesterdayKey() {
   return d.getFullYear() + '-' + (m < 10 ? '0' + m : m) + '-' + (day < 10 ? '0' + day : day);
 }
 
+/** 默认名字。改名迁移：老存档里如果还是默认值，也一并换成新名字 */
+const DEFAULT_NAME = '小明';
+
 /** 补齐老存档里缺的字段 */
 function ensure(s) {
-  if (!s.name) s.name = '小名还没起';
+  if (!s.name || s.name === '小名还没起') s.name = DEFAULT_NAME;
   if (typeof s.coins !== 'number') s.coins = 10;
   if (typeof s.exp !== 'number') s.exp = 0;
   if (!s.inv || typeof s.inv !== 'object') s.inv = { basic: 3, snack: 0, feast: 0 };
