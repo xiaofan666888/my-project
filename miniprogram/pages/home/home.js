@@ -26,6 +26,7 @@ Page({
     hunger: 80,
     clean: 80,
     mood: 70,
+    avatar: 'cat',
     petImg: '/images/cat/cat-normal.png',
     say: '戳戳我',
     bubbleOn: false,
@@ -40,6 +41,8 @@ Page({
   },
 
   onLoad() {
+    this.avatar = wx.getStorageSync('avatar_v1') || 'cat';
+    this.setData({ avatar: this.avatar });
     this.loadState();
     this.render();
   },
@@ -97,7 +100,7 @@ Page({
       hunger: Math.round(s.hunger),
       clean: Math.round(s.clean),
       mood: Math.round(s.mood),
-      petImg: '/images/cat/cat-' + expressionOf(s) + '.png',
+      petImg: '/images/' + this.avatar + '/' + this.avatar + '-' + expressionOf(s) + '.png',
       since: pet.sinceText(s.lastTick),
       disFeed: !!left.feed,
       disBath: !!left.bath,
@@ -208,5 +211,13 @@ Page({
 
   goTalk() {
     wx.navigateTo({ url: '/pages/talk/talk' });
+  },
+
+  onSwitchAvatar() {
+    this.avatar = this.avatar === 'cat' ? 'me' : 'cat';
+    wx.setStorageSync('avatar_v1', this.avatar);
+    this.setData({ avatar: this.avatar });
+    this.render();
+    this.say(this.avatar === 'cat' ? '换回猫猫了' : '换成你自己了', 'anim-head');
   }
 });

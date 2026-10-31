@@ -13,6 +13,9 @@ Page({
   },
 
   onLoad() {
+    const avatar = wx.getStorageSync('avatar_v1') || 'cat';
+    this.setData({ petImg: '/images/' + avatar + '/' + avatar + '-normal.png' });
+
     this.ctx = null;
     this.buffer = null;
     this.src = null;

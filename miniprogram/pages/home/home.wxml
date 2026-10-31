@@ -74,6 +74,7 @@
       <button class="dbg" data-skip="259200" bindtap="onSkip">3 天</button>
     </view>
     <button class="dbg dbg-wide" bindtap="onReset">重置数据</button>
+    <button class="dbg dbg-wide" bindtap="onSwitchAvatar">切换形象：{{avatar === 'cat' ? '猫' : '我'}}</button>
   </view>
 
 </view>
