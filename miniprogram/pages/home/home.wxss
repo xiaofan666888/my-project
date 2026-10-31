@@ -753,3 +753,163 @@
 .ground {
   z-index: 1;
 }
+
+/* 墙上挂画 */
+.wall-frame {
+  position: absolute;
+  right: 150rpx;
+  top: 200rpx;
+  width: 176rpx;
+  height: 224rpx;
+  border-radius: 6rpx;
+  background: #fffdf8;
+  box-shadow: 0 0 0 10rpx #f4e6d2, 0 12rpx 26rpx rgba(140, 110, 80, 0.18);
+  transform: rotate(2.5deg);
+}
+
+.frame-mat {
+  position: absolute;
+  left: 16rpx;
+  top: 16rpx;
+  right: 16rpx;
+  bottom: 16rpx;
+  border-radius: 2rpx;
+  background: linear-gradient(165deg, #cfe4f7 0%, #eaf2ff 100%);
+  overflow: hidden;
+}
+
+.frame-mat::before {
+  content: '';
+  position: absolute;
+  right: 22%;
+  top: 18%;
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: 50%;
+  background: #f8d79c;
+}
+
+.frame-mat::after {
+  content: '';
+  position: absolute;
+  left: 8%;
+  bottom: 24%;
+  width: 84%;
+  height: 2rpx;
+  background: rgba(120, 145, 175, 0.4);
+}
+
+/* 暗角：让画面聚焦 */
+.vignette {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: radial-gradient(ellipse at 50% 44%, rgba(0, 0, 0, 0) 42%, rgba(58, 38, 26, 0.2) 100%);
+  pointer-events: none;
+}
+
+/* ================= 每日任务 ================= */
+.tasks {
+  margin-top: 26rpx;
+  padding: 24rpx 26rpx 8rpx;
+  border-radius: 32rpx;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 12rpx 32rpx rgba(40, 40, 70, 0.06);
+}
+
+.tasks-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 12rpx;
+}
+
+.tasks-title {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #2b2a36;
+}
+
+.tasks-sub {
+  font-size: 20rpx;
+  color: #a3a8b8;
+}
+
+.task-row {
+  display: flex;
+  align-items: center;
+  padding: 12rpx 0;
+}
+
+.task-check {
+  width: 34rpx;
+  height: 34rpx;
+  border-radius: 50%;
+  border: 2rpx solid #dfe2ec;
+  color: #ffffff;
+  font-size: 20rpx;
+  line-height: 30rpx;
+  text-align: center;
+  margin-right: 16rpx;
+  flex: none;
+}
+
+.task-check.on {
+  background: #5bbf7a;
+  border-color: #5bbf7a;
+}
+
+.task-main {
+  flex: 1;
+}
+
+.task-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.task-name {
+  font-size: 24rpx;
+  color: #2b2a36;
+}
+
+.task-name.done {
+  color: #a3a8b8;
+  text-decoration: line-through;
+}
+
+.task-coins {
+  font-size: 19rpx;
+  color: #d98a24;
+}
+
+.task-bar {
+  height: 8rpx;
+  border-radius: 999rpx;
+  background: #eef0f7;
+  margin-top: 8rpx;
+  overflow: hidden;
+}
+
+.task-fill {
+  height: 100%;
+  border-radius: 999rpx;
+  background: linear-gradient(90deg, #a9d7ff, #5b7cfa);
+  transition: width 0.4s ease;
+}
+
+.task-fill.full {
+  background: linear-gradient(90deg, #a8e6b8, #4fbf77);
+}
+
+.task-num {
+  font-size: 19rpx;
+  color: #b0b4c4;
+  margin-left: 14rpx;
+  width: 58rpx;
+  text-align: right;
+  flex: none;
+}

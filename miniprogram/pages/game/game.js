@@ -139,12 +139,15 @@ Page({
       this.setData({ best: score });
     }
 
-    if (coins > 0) {
-      const s = game.ensure(wx.getStorageSync(STORE_KEY) || {});
-      // 小游戏金币不占每日互动上限，单独结算
-      s.coins += coins;
-      game.addExp(s, Math.floor(score / 3));
-      wx.setStorageSync(STORE_KEY, s);
+    const s = game.ensure(wx.getStorageSync(STORE_KEY) || {});
+    // 小游戏金币不占每日互动上限，单独结算
+    s.coins += coins;
+    game.addExp(s, Math.floor(score / 3));
+    const task = game.bump(s, 'game');
+    wx.setStorageSync(STORE_KEY, s);
+
+    if (task.reward > 0) {
+      this.setData({ coinsEarned: coins + task.reward });
     }
   },
 

@@ -51,6 +51,9 @@ Page({
     coins: 0,
     level: 1,
     title: '陌生人',
+    name: '小名还没起',
+    tasks: [],
+    tasksDone: 0,
     expPct: 0,
     expText: '',
     foodCount: 0,
@@ -127,6 +130,7 @@ Page({
     });
 
     const lv = game.levelOf(s.exp);
+    const tasks = game.taskList(s);
 
     const patch = {
       hunger: Math.round(s.hunger),
@@ -138,6 +142,9 @@ Page({
       coins: s.coins,
       level: lv.lv,
       title: lv.title,
+      name: s.name,
+      tasks: tasks,
+      tasksDone: tasks.filter((t) => t.done).length,
       expPct: lv.progress,
       expText: lv.isMax ? '已满级' : (s.exp + ' / ' + lv.nextNeed),
       foodCount: s.inv.basic,
@@ -246,7 +253,12 @@ Page({
     // 互动也给一点点金币和少量经验，但有每日上限
     const gain = game.addCoins(this.state, 1);
     if (gain > 0) game.addExp(this.state, 1);
+    const task = game.bump(this.state, 'touch');
     this.save();
+
+    if (task.reward > 0) {
+      text = text + ' 任务完成 +' + task.reward + ' 金币';
+    }
 
     this.say(text, anim);
     this.spawnParticles(part);
@@ -273,9 +285,13 @@ Page({
       return;
     }
     s.cd.feed = Date.now() + pet.CONFIG.actions.feed.cooldownSec * 1000;
+    const task = game.bump(s, 'feed');
     this.save();
 
-    this.say(r.leveledUp ? '升级了！现在是「' + r.level.title + '」' : '好吃！', 'anim-head');
+    let line = r.leveledUp ? '升级了！现在是「' + r.level.title + '」' : '好吃！';
+    if (task.reward > 0) line += ' 任务完成 +' + task.reward + ' 金币';
+
+    this.say(line, 'anim-head');
     this.spawnParticles('belly');
     this.render();
   },
@@ -348,5 +364,23 @@ Page({
 
   goGame() {
     wx.navigateTo({ url: '/pages/game/game' });
+  },
+
+  onRename() {
+    wx.showModal({
+      title: '给它起个名字',
+      editable: true,
+      placeholderText: '例如：小九',
+      content: this.state.name || '',
+      success: (res) => {
+        if (!res.confirm) return;
+        const name = (res.content || '').trim().slice(0, 8);
+        if (!name) return;
+        this.state.name = name;
+        this.save();
+        this.render();
+        this.say('我叫' + name + '了', 'anim-feet');
+      }
+    });
   }
 });

@@ -11,6 +11,12 @@
     <view class="room-floor"></view>
     <view class="room-base"></view>
 
+    <view class="wall-frame">
+      <view class="frame-mat"></view>
+    </view>
+
+    <view class="vignette"></view>
+
     <view class="plant">
       <view class="leaf leaf-a"></view>
       <view class="leaf leaf-b"></view>
@@ -28,7 +34,7 @@
     <view class="topbar">
       <view class="who">
         <view class="who-row">
-          <text class="who-name">小名还没起</text>
+          <text class="who-name" bindtap="onRename">{{name}}</text>
           <text class="lv">Lv.{{level}} · {{title}}</text>
         </view>
         <text class="who-sub">{{moodText}}</text>
@@ -113,6 +119,26 @@
         <text class="act-ico">🎾</text>
         <text class="act-name">陪玩</text>
         <text class="act-cd">{{cdPlay || '＋心情'}}</text>
+      </view>
+    </view>
+
+    <view class="tasks">
+      <view class="tasks-head">
+        <text class="tasks-title">今日任务</text>
+        <text class="tasks-sub">{{tasksDone}} / {{tasks.length}}</text>
+      </view>
+      <view class="task-row" wx:for="{{tasks}}" wx:key="id">
+        <view class="task-check {{item.done ? 'on' : ''}}">{{item.done ? '✓' : ''}}</view>
+        <view class="task-main">
+          <view class="task-line">
+            <text class="task-name {{item.done ? 'done' : ''}}">{{item.name}}</text>
+            <text class="task-coins">+{{item.coins}} 🪙</text>
+          </view>
+          <view class="task-bar">
+            <view class="task-fill {{item.done ? 'full' : ''}}" style="width:{{item.pct}}%"></view>
+          </view>
+        </view>
+        <text class="task-num">{{item.cur}}/{{item.target}}</text>
       </view>
     </view>
 

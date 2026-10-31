@@ -67,6 +67,7 @@ function yesterdayKey() {
 
 /** 补齐老存档里缺的字段 */
 function ensure(s) {
+  if (!s.name) s.name = '小名还没起';
   if (typeof s.coins !== 'number') s.coins = 10;
   if (typeof s.exp !== 'number') s.exp = 0;
   if (!s.inv || typeof s.inv !== 'object') s.inv = { basic: 3, snack: 0, feast: 0 };
@@ -182,9 +183,64 @@ function randomEvent(awayMs) {
   return null;
 }
 
+/** ---------------- 每日任务 ---------------- */
+
+const TASKS = [
+  { id: 'feed', name: '喂它 3 次', target: 3, coins: 8 },
+  { id: 'touch', name: '摸摸它 5 次', target: 5, coins: 6 },
+  { id: 'game', name: '玩一局小游戏', target: 1, coins: 10 }
+];
+
+function ensureDaily(s) {
+  const today = todayKey();
+  if (s.dailyDay !== today) {
+    s.dailyDay = today;
+    s.daily = {};
+    s.dailyRewarded = {};
+  }
+  if (!s.daily) s.daily = {};
+  if (!s.dailyRewarded) s.dailyRewarded = {};
+}
+
+/**
+ * 记一次任务进度，达成时自动发奖励。
+ * 返回 { reward } —— reward > 0 表示刚好完成
+ */
+function bump(s, id) {
+  ensureDaily(s);
+  s.daily[id] = (s.daily[id] || 0) + 1;
+
+  const task = TASKS.find((t) => t.id === id);
+  if (!task) return { reward: 0 };
+
+  if (s.daily[id] >= task.target && !s.dailyRewarded[id]) {
+    s.dailyRewarded[id] = true;
+    s.coins += task.coins;
+    return { reward: task.coins, name: task.name };
+  }
+  return { reward: 0 };
+}
+
+function taskList(s) {
+  ensureDaily(s);
+  return TASKS.map((t) => {
+    const cur = Math.min(s.daily[t.id] || 0, t.target);
+    return {
+      id: t.id,
+      name: t.name,
+      target: t.target,
+      cur: cur,
+      done: cur >= t.target,
+      coins: t.coins,
+      pct: Math.round((cur / t.target) * 100)
+    };
+  });
+}
+
 module.exports = {
   FOODS,
   LEVELS,
+  TASKS,
   ensure,
   levelOf,
   addExp,
@@ -193,5 +249,7 @@ module.exports = {
   useFood,
   buy,
   randomEvent,
-  todayKey
+  todayKey,
+  bump,
+  taskList
 };
