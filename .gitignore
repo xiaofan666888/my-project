@@ -1,0 +1,36 @@
+# 依赖（以后装 Node 包会产生，体积巨大，绝不能提交）
+node_modules/
+.pnpm-store/
+
+# 构建产物
+dist/
+build/
+.next/
+out/
+
+# 临时文件
+.tmp/
+*.log
+*.tmp
+*.bak
+
+# 系统生成
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 编辑器配置（保留 settings.json，其余忽略）
+.vscode/*
+!.vscode/settings.json
+
+# 环境变量与密钥（永远不要提交）
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# 本地数据库文件
+*.sqlite
+*.sqlite3
+*.db
