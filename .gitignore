@@ -38,3 +38,6 @@ desktop.ini
 miniprogram/images/pet-minion.png
 # 微信开发者工具的本地私有配置
 miniprogram/project.private.config.json
+# 美术原图（可能含隐私或版权），只提交说明文件
+art_source/*
+!art_source/README.md
